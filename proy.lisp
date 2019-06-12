@@ -94,7 +94,16 @@
 
 ; Devuelve la matriz transpuesta
 (DEFUN trans (Matriz)
-    (trans_aux Matriz 0 (1- (matriz_columnas Matriz)))
+    (COND
+        (
+            (NULL Matriz)
+            NIL
+        )
+        (
+            T
+            (trans_aux Matriz 0 (1- (matriz_columnas Matriz)))
+        )
+    )
 )
 
 
@@ -306,8 +315,10 @@
 
 ; Variables de prueba
 (SETQ lista `(1 2 3 4 a b))
-(SETQ listaP `(a b c d))
+(SETQ listaP `(a b c))
+(SETQ listaVacia `())
 (SETQ matrix `((1 2 3) (4 5 6) (7 8 9) (a b c)))
+(SETQ vector `((1) (2) (3) (4)))
 
 ;(write (list_len lista))
 ;(write (list_elem lista 4))
@@ -322,9 +333,18 @@
 ;(write (lista_remover lista 0))
 ;(write (lista_add_last lista `z))
 
-(write (trans matrix)) ; (trans (trans matrix)))
+(write (trans matrix))
+ ; (trans (trans matrix)))
+(write (trans vector))
+ ; (trans (trans vector)))
+(write (trans `()))
+
 (write (sumaPrimos 10))
+(write " ")
+(write (sumaPrimos -10))
+
 (write (permLex listaP))
+(write (permLex listaVacia))
 
 
 
