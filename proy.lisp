@@ -22,7 +22,7 @@
 
 
 
-; Obtiene el elemento numéro 'Pos' de la lista 'List'
+; Obtiene el elemento número 'Pos' de la lista 'List'
 (DEFUN lista_elem (List Pos)
     (COND
         (
@@ -31,7 +31,7 @@
         )
         (
             T
-            (lista_elem (CDR List) (1- Pos))
+            (lista_elem (CDR List) (1- Pos));;; 1- Pos? no sería - Pos 1? cuál es la diferencia?
         )
     )
 )
@@ -64,7 +64,7 @@
         )
         (
             T
-            (matriz_fila (CDR Matriz) (1- FilaID))
+            (matriz_fila (CDR Matriz) (1- FilaID)) ;;; Estoy llegando a suponer que será como decrementar en uno el valor de su operando
         )
     )
 )
@@ -101,7 +101,7 @@
         )
         (
             T
-            (trans_aux Matriz 0 (1- (matriz_columnas Matriz)))
+            (trans_aux Matriz 0 (1- (matriz_columnas Matriz))) ;;; los nombres matriz_columna y matriz_columnas pueden llegar a ser confusos
         )
     )
 )
@@ -118,8 +118,8 @@
             (LIST (matriz_columna Matriz ColID))
         )
         ; Caso recursivo:
-        ; Si hay más de una columna, la transpuesta será agregar una nueva fila al final de Mt la cual será la primer columna de M, y luego repetir
-        ; el proceso con M sin su primer columna (instncia reducida).
+        ; Si hay más de una columna, la transpuesta será agregar una nueva fila al final de Mt la cual será la primer columna de M, 
+        ; y luego repetir el proceso con M sin su primer columna (instancia reducida).
         (
             T
             (CONS (matriz_columna Matriz ColID) (trans_aux Matriz (1+ ColID) ColUlt))
@@ -132,17 +132,21 @@
 ;====================================================================================================================================================
 
 
+;;; El de la matriz transpuesta genial, entendí todo y me pareció todo correcto
+;;; Me parece que está todo bien modularizado
+
+
 
 
 ; Intenta dividir a N por todos los números en el intervalo (2 .. N-1), si alguno lo divide entonces es compuesto y retorna T, si ninguno lo
 ; divide entonces es primo y retorna NIL.
-(DEFUN verificar_divisores (N Pos)
+(DEFUN verificar_divisores (N Pos) ;;; le pondria otro nombre, como es_compuesto
     (COND
         ; Caso base:
         ; Si se llegó hasta intentar dividir por uno (ningun número divide a N) entonces es primo, devuelve T.
         (
             (= Pos 1)
-            T
+            T ;;; inconsisencia con el comentario "método"?
         )
         ; Caso base:
         ; Si 'pos' divide al número, entonces es compuesto, devuelve NIL.
@@ -185,7 +189,7 @@
 
 
 
-; Para un natural N, suma todos los primos en el intervalo (0 .. N)
+; Para un natural N, suma todos los primos en el intervalo (0, ..., N)
 (DEFUN sumaPrimos (N)
     (COND
         ; Si N < 2 entonces no hay ningún primo, se retorna 0.
@@ -203,7 +207,7 @@
 
 
 
-; Verifica todos los números en el intervalo (Pos .. N), sumando todos los primos que encuentre.
+; Verifica todos los números en el intervalo (Pos, ..., N), sumando todos los primos que encuentre.
 (DEFUN sumaPrimos_ex (N Pos)
     (COND
         ; Caso base:
