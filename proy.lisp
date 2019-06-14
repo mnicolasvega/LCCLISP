@@ -235,14 +235,23 @@
 )
 
 
+; Dada una lista Lista y dos enteros Inicio, Final retorna una sublista S de Lista tal que
+; S comienza en Inicio y finaliza en Final, ambos enteros incluídos,
+; es decir, sea Lista = [X_1, ..., X_n] tenemos que S = [X_Inicio, ..., X_Final].
 ; Se asume que 0 <= Inicio < tam(subList) y 0 <= Final < tam(subList)
 (DEFUN subList(Lista Inicio Final)
 	(COND
+		; Caso base:
+		;	Si Inicio > Final entonces S = []
 		(
 			(> Inicio Final)
 			`()
 		)
-				
+			
+		; Caso recursivo:
+		;	Si Inicio <= Final entonces S es el elemento ubicado en la posición Inicio de Lista concatenado con 
+		;	la sublista desde Inicio+1 hasta Final de Lista.
+		;	Es decir, S = [X_Inicio] U [X_Inicio+1, ..., X_Final] 
 		(
 			T
 			(APPEND
@@ -261,22 +270,32 @@
 	)
 )
 
+
+; Dada una lista de letras Lista se retorna una lista L con los mismos elementos de Lista pero ordenados lexicograficamente.
+; Para realizar el orden se aplica el algoritmo Merge Sort.
 (DEFUN mergeSort(Lista)
 	(COND
+		; Caso base:
+		;	Lista es una lista vacía, por lo tanto L = [].
 		(
 			(NULL Lista)
 			`()
 		)
 		
+		; Caso base:
+		;	Lista tiene un solo elemento por lo que ya está ordenada, L = Lista.
 		(
 			(= (lista_len Lista) 1)
 			Lista
 		)
 		
+		; Caso recursivo:
+		;	Lista tiene más de un elemento.
+		;	Luego L será igual a la primera mitad de la lista ordenada y la segunda mitad de la lista ordenada intercaladas entre si de manera ordenada.
 		(
 			T
-			(intercalarOrdenado
-				(mergeSort
+			(intercalarOrdenado ; se intercala de manera ordenada las dos mitades ya ordenadas.
+				(mergeSort ; se aplica merge de la primera mitad.
 					(subList
 						Lista
 						0
@@ -291,7 +310,7 @@
 					) 
 				)
 				
-				(mergeSort
+				(mergeSort ; se aplica merge de la segunda mitad.
 					(subList
 						Lista
 						(FLOOR
@@ -310,14 +329,20 @@
 	)
 )
 
-
+; Dada dos listas de letras ordenadas lexicograficamente, ListaA y listaB, retorna una lista L tal que
+; L es el resultado de intercalar ListaA y ListaB de manera ordenada,
+; es decir L contendrá todo elemento de ListaA y ListaB pero ordenados.
 (DEFUN intercalarOrdenado(ListaA ListaB)
 	(COND
+		; Caso base:
+		;	ListaA está vacía por lo tanto L = ListaB.
 		(
 			(NULL ListaA)
 			ListaB
 		)
 		
+		; Caso base:
+		;	ListaB está vacía por lo tanto L = ListaA.
 		(
 			(NULL ListaB)
 			ListaA
@@ -325,7 +350,7 @@
 		
 		; Caso recursivo:
 		;	Si el primer elemento de ListaA es menor al primer elemento de ListaB,
-		;	entonces nuestra lista ordenada será el primer elemento de ListaA concatenado
+		;	entonces L será el primer elemento de ListaA concatenado
 		;	a la lista resultante de intercalar de manera ordenadada las listas ListaA (sin su primer elemento) y listaB.
 		(
 			(CHAR< (COERCE (CAR ListaA) 'character) (COERCE (CAR ListaB) 'character) )
@@ -333,7 +358,7 @@
 				(LIST
 					(CAR ListaA)
 				)
-				(intercalarOrdenado
+				(intercalarOrdenado ; instancia reducida
 					(CDR ListaA)
 					ListaB
 				)
@@ -342,7 +367,7 @@
 		
 		; Caso recursivo:
 		;	En caso contrario, el primer elemento de ListaB es menor o igual a el primer elemento de listaA.
-		;	Por lo tanto, nuestra lista ordenada será el primer elemento de ListaB concatenado
+		;	Por lo tanto, L será el primer elemento de ListaB concatenado
 		;	a la lista resultante de intercalar de manera ordenadada las listas ListaA y listaB (sin su primer elemento).
 		(
 			T
@@ -350,7 +375,7 @@
 				(LIST
 					(CAR ListaB)
 				)
-				(intercalarOrdenado
+				(intercalarOrdenado ; instancia reducida
 					ListaA
 					(CDR ListaB)
 				)
