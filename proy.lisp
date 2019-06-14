@@ -167,7 +167,7 @@
 	
 		(
 			T
-			(es_primo_impar N 3 (floor (sqrt N))) ; Si N es impar y mayor a 2 entonces N es primo si y solo si no existe algún número impar k tal que 3 <= k <= sqrt(N) y k | N.
+			(es_primo_impar N 3 (FLOOR (sqrt N))) ; Si N es impar y mayor a 2 entonces N es primo si y solo si no existe algún número impar k tal que 3 <= k <= sqrt(N) y k | N.
 		)
 	)
 )
@@ -235,6 +235,130 @@
 )
 
 
+; Se asume que 0 <= Inicio < tam(subList) y 0 <= Final < tam(subList)
+(DEFUN subList(Lista Inicio Final)
+	(COND
+		(
+			(> Inicio Final)
+			`()
+		)
+				
+		(
+			T
+			(APPEND
+				(LIST
+					(lista_elem Lista Inicio)
+				)
+				(subList
+					Lista
+					(1+ Inicio)
+					Final
+				)
+			)
+					
+		)
+	
+	)
+)
+
+(DEFUN mergeSort(Lista)
+	(COND
+		(
+			(NULL Lista)
+			`()
+		)
+		
+		(
+			(= (lista_len Lista) 1)
+			Lista
+		)
+		
+		(
+			T
+			(intercalarOrdenado
+				(mergeSort
+					(subList
+						Lista
+						0
+						(1-
+							(FLOOR
+								(/ 
+									(lista_len Lista)
+									2
+								)
+							)
+						)
+					) 
+				)
+				
+				(mergeSort
+					(subList
+						Lista
+						(FLOOR
+							(/ 
+								(lista_len Lista)
+								2
+							)
+						)
+						(1-
+							(lista_len Lista)
+						)
+					) 
+				)
+			)
+		)
+	)
+)
+
+
+(DEFUN intercalarOrdenado(ListaA ListaB)
+	(COND
+		(
+			(NULL ListaA)
+			ListaB
+		)
+		
+		(
+			(NULL ListaB)
+			ListaA
+		)
+		
+		; Caso recursivo:
+		;	Si el primer elemento de ListaA es menor al primer elemento de ListaB,
+		;	entonces nuestra lista ordenada será el primer elemento de ListaA concatenado
+		;	a la lista resultante de intercalar de manera ordenadada las listas ListaA (sin su primer elemento) y listaB.
+		(
+			(CHAR< (COERCE (CAR ListaA) 'character) (COERCE (CAR ListaB) 'character) )
+			(APPEND
+				(LIST
+					(CAR ListaA)
+				)
+				(intercalarOrdenado
+					(CDR ListaA)
+					ListaB
+				)
+			)
+		)
+		
+		; Caso recursivo:
+		;	En caso contrario, el primer elemento de ListaB es menor o igual a el primer elemento de listaA.
+		;	Por lo tanto, nuestra lista ordenada será el primer elemento de ListaB concatenado
+		;	a la lista resultante de intercalar de manera ordenadada las listas ListaA y listaB (sin su primer elemento).
+		(
+			T
+			(APPEND
+				(LIST
+					(CAR ListaB)
+				)
+				(intercalarOrdenado
+					ListaA
+					(CDR ListaB)
+				)
+			)
+		)
+	)
+)
+
 
 
 (DEFUN permLex (Lista)
@@ -244,7 +368,7 @@
 			`()
 		)
 		(
-			(permLex_ex Lista `() 0 (1- (lista_len Lista)))
+			(permLex_ex (mergeSort Lista) `() 0 (1- (lista_len Lista))) ; Le pasamos la lista ordenada.
 		)
 	)
 )
