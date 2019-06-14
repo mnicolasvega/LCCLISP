@@ -38,19 +38,63 @@
 
 
 
+; Añade el elemento 'Elem' al final de la lista 'List'
 (DEFUN lista_add_last (List Elem)
 	(APPEND List (LIST Elem))
 )
 
 
 
-;====================================================================================================================================================
+; Remuve el elemento de la posición 'Pos' de la lista 'Lista'.
+(DEFUN lista_remover (Lista Pos)
+	(COND
+		(
+			(= 0 Pos)
+			(CDR Lista) ; Descarta el primer caracter (el de la posicion 'Pos')
+		)
+		(
+			T
+			(CONS (CAR Lista) (lista_remover (CDR Lista) (1- Pos)))
+		)
+	)
+)
 
 
 
 ; Obtiene la cantidad de columnas de una matriz 'Matrix'.
 (DEFUN get_cantidad_columnas(Matrix)
 	(lista_len (CAR Matrix))
+)
+
+
+
+; Verifica si 'Matrix' es una matriz, es decir, una lista de listas
+(DEFUN es_matriz (Matrix)
+    (COND
+        (
+            (NULL Matrix)
+            NIL
+        )
+        (
+            T
+            (es_matriz_ex Matrix 0 (1- (lista_len Matrix)))
+        )
+    )
+)
+
+
+
+(DEFUN es_matriz_ex (Matriz Pos Ult)
+    (COND
+        (
+            (= Pos Ult)
+            (LISTP (CAR Matriz))
+        )
+        (
+            T
+            (AND (LISTP (CAR Matriz)) (es_matriz_ex (CDR Matriz) (1+ Pos) Ult))
+        )
+    )
 )
 
 
@@ -81,11 +125,7 @@
 (DEFUN trans (Matriz)
 	(COND
 		(
-			(NULL Matriz)
-			NIL
-		)
-		(
-			T
+			(es_matriz Matriz)
 			(trans_aux Matriz 0 (1- (get_cantidad_columnas Matriz)))
 		)
 	)
@@ -146,6 +186,8 @@
 	)
 )
 
+
+
 ; Dado un numero N determina si N es primo, en caso de serlo retorna T, en caso contrario retorna NIL.
 (DEFUN es_primo(N)
 	(COND
@@ -171,6 +213,7 @@
 		)
 	)
 )
+
 
 
 ; Para un natural N, suma todos los primos en el intervalo (0, ..., N)
@@ -215,24 +258,10 @@
 	)
 )
 
+
+
 ;====================================================================================================================================================
 
-
-
-
-; Remuve el elemento de la posición 'Pos' de la lista 'Lista'.
-(DEFUN lista_remover (Lista Pos)
-	(COND
-		(
-			(= 0 Pos)
-			(CDR Lista) ; Descarta el primer caracter (el de la posicion 'Pos')
-		)
-		(
-			T
-			(CONS (CAR Lista) (lista_remover (CDR Lista) (1- Pos)))
-		)
-	)
-)
 
 
 ; Dada una lista Lista y dos enteros Inicio, Final retorna una sublista S de Lista tal que
@@ -269,6 +298,7 @@
 	
 	)
 )
+
 
 
 ; Dada una lista de letras Lista se retorna una lista L con los mismos elementos de Lista pero ordenados lexicograficamente.
@@ -329,6 +359,8 @@
 	)
 )
 
+
+
 ; Dada dos listas de letras ordenadas lexicograficamente, ListaA y listaB, retorna una lista L tal que
 ; L es el resultado de intercalar ListaA y ListaB de manera ordenada,
 ; es decir L contendrá todo elemento de ListaA y ListaB pero ordenados.
@@ -386,6 +418,10 @@
 
 
 
+;====================================================================================================================================================
+
+
+
 (DEFUN permLex (Lista)
 	(COND
 		(
@@ -393,10 +429,13 @@
 			`()
 		)
 		(
+			T
 			(permLex_ex (mergeSort Lista) `() 0 (1- (lista_len Lista))) ; Le pasamos la lista ordenada.
 		)
 	)
 )
+
+
 
 ; Para una cadena de longitud n, se encarga de invocar a 'permutar' n veces y va concatenando los resultados que permutar genera.
 (DEFUN permLex_ex (Lista ListaPref Pos Ult)
@@ -415,6 +454,8 @@
 		)
 	)
 )
+
+
 
 ; Permuta el primer símbolo de una lista y luego llama a permLex_ex con una instancia reducida para que permute esta instancia.
 ; El caso base es cuando la lista tiene un único elemento, entonces sus permutaciones son sólo el elemento, entonces devuelve una lista con otra lista dentro, la cual tiene al elemento.
@@ -441,3 +482,6 @@
 	)
 )
 
+
+
+;====================================================================================================================================================
