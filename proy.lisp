@@ -181,7 +181,7 @@
 		;	si y solo si existe algún k' impar tal que PosibleDivisor+2 <= k' <= Tope y k' divide a N.
 		(
 			T
-			(esPrimoImpar N (+ PosibleDivisor 2) Tope)
+			(es_primo_impar N (+ PosibleDivisor 2) Tope)
 		)	  
 	)
 )
